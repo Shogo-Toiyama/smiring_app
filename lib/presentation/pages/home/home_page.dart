@@ -7,13 +7,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Center(
         child: IconButton(
-          onPressed: () {context.push(PagePath.timezoneScroll);},
-          icon: const Icon(
-            Icons.watch_later_outlined
-          ),
+          onPressed: () {
+            context.push(PagePath.timezoneSimpleList);
+          },
+          icon: const Icon(Icons.watch_later_outlined),
         ),
       ),
     );
