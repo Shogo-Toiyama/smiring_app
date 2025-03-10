@@ -1,88 +1,111 @@
 import 'package:smiring_app/presentation/utils/location_info.dart';
 
-class WorldLocations {
-  LocationInfo bangkok = LocationInfo(
+class WorldLocations extends Iterable<LocationInfo>{
+  WorldLocations._();
+
+  static final WorldLocations _instance = WorldLocations._();
+  factory WorldLocations() => _instance;
+
+  static const LocationInfo bangkok = LocationInfo(
       locationName: 'Bangkok (Thailand)',
       cityId: 'Asia/Bangkok',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇹🇭',
     );
-  LocationInfo california = LocationInfo(
+  static const LocationInfo california = LocationInfo(
       locationName: 'California (USA)',
       cityId: 'America/Los_Angeles',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇺🇸'
     );
-  LocationInfo chicago = LocationInfo(
+  static const LocationInfo chicago = LocationInfo(
       locationName: 'Chicago (USA)',
       cityId: 'America/Chicago',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇺🇸'
     );
-  LocationInfo hawaii = LocationInfo(
+  static const LocationInfo hawaii = LocationInfo(
       locationName: 'Hawaii (USA)',
       cityId: 'Pacific/Honolulu',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇺🇸'
     );
-  LocationInfo kualaLumpur = LocationInfo(
+  static const LocationInfo kualaLumpur = LocationInfo(
       locationName: 'Kuala Lumpur (Malaysia)',
       cityId: 'Asia/Kuala_Lumpur',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇲🇾',
     );
-  LocationInfo london = LocationInfo(
+  static const LocationInfo london = LocationInfo(
       locationName: 'London (UK)',
       cityId: 'Europe/London',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇬🇧'
     );
-  LocationInfo madrid = LocationInfo(
+  static const LocationInfo madrid = LocationInfo(
       locationName: 'Madrid (Spain)',
       cityId: 'Europe/Madrid',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇪🇸',
     );
-  LocationInfo newYork = LocationInfo(
+  static const LocationInfo newYork = LocationInfo(
       locationName: 'New York (USA)',
       cityId: 'America/New_York',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇺🇸'
     );
-  LocationInfo paris = LocationInfo(
+  static const LocationInfo paris = LocationInfo(
       locationName: 'Paris (France)',
       cityId: 'Europe/Paris',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇫🇷'
     );
-  LocationInfo shanghai = LocationInfo(
+  static const LocationInfo shanghai = LocationInfo(
       locationName: 'Shanghai (China)',
       cityId: 'Asia/Shanghai',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇨🇳',
     );
-  LocationInfo sydney = LocationInfo(
+  static const LocationInfo sydney = LocationInfo(
       locationName: 'Sydney (Australia)',
       cityId: 'Australia/Sydney',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇦🇺',
     );
-  LocationInfo taipei = LocationInfo(
+  static const LocationInfo taipei = LocationInfo(
       locationName: 'Taipei (Taiwan)',
       cityId: 'Asia/Taipei',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇹🇼',
     );
-  LocationInfo tokyo = LocationInfo(
+  static const LocationInfo tokyo = LocationInfo(
       locationName: 'Tokyo (Japan)',
       cityId: 'Asia/Tokyo',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇯🇵'
     );
-  LocationInfo toronto = LocationInfo(
+  static const LocationInfo toronto = LocationInfo(
       locationName: 'Toronto (USA)',
       cityId: 'America/Toronto',
-      dateTime: DateTime.now(),
+      // dateTime: DateTime.now(),
       emoji: '🇺🇸'
     );
+
+    @override
+  Iterator<LocationInfo> get iterator => [
+        bangkok,
+        california,
+        chicago,
+        hawaii,
+        kualaLumpur,
+        london,
+        madrid,
+        newYork,
+        paris,
+        shanghai,
+        sydney,
+        taipei,
+        tokyo,
+        toronto
+      ].iterator;
 }

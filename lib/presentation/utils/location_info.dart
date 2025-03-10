@@ -1,12 +1,12 @@
 class LocationInfo {
-  String locationName;
-  DateTime dateTime;
-  String cityId;
-  String emoji;
+  final String locationName;
+  //DateTime dateTime;
+  final String cityId;
+  final String emoji;
 
-  LocationInfo ({
+  const LocationInfo ({
       required this.locationName,
-      required this.dateTime,
+      //required this.dateTime,
       required this.cityId,
       required this.emoji,
   });

@@ -52,81 +52,80 @@ class TimezoneSimpleListCountryBar extends HookConsumerWidget {
         minute: stringToInt(selectedValues.value["minute"]!),
       );
 
-      ref.read(baseTimeProvider.notifier).setBaseTime(updatedTime, loc);
+      ref.read(baseTimeProvider.notifier).setBaseTime(updatedTime, loc, false);
     }
 
     return SizedBox(
-        width: 1000,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 300,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          location.emoji,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          location.locationName,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ]),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      key: key,
+      width: 1000,
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 350,
+                child: Row(
                   children: [
-                    buildDropdown("year", 2020, 2030,
-                        selectedValues.value["year"]!, updateTime),
-                    const Text(
-                      ' / ',
-                      style: TextStyle(fontSize: 20),
+                    const SizedBox(
+                      width: 20,
                     ),
-                    buildDropdown("month", 1, 12,
-                        selectedValues.value["month"]!, updateTime),
-                    const Text(
-                      ' / ',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    buildDropdown(
-                        "day", 1, 31, selectedValues.value["day"]!, updateTime),
-                    SizedBox(
-                      width: 50,
-                      child: Text(
-                        ' ${weekdaysList[now.weekday]}   ',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: now.weekday == 6
-                                ? Colors.blue
-                                : now.weekday == 7
-                                    ? Colors.red
-                                    : Colors.grey),
-                      ),
-                    ),
-                    buildDropdown("hour", 0, 23, selectedValues.value["hour"]!,
-                        updateTime),
-                    const Text(
-                      ' : ',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    buildDropdown("minute", 0, 59,
-                        selectedValues.value["minute"]!, updateTime),
+                    Text(location.emoji, style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 20),
+                    Text(location.locationName,
+                        style: const TextStyle(fontSize: 20)),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-          ],
-        ));
+              ),
+              Row(
+                children: [
+                  buildDropdown("year", 2020, 2030,
+                      selectedValues.value["year"]!, updateTime),
+                  const Text(' / ', style: TextStyle(fontSize: 20)),
+                  buildDropdown("month", 1, 12, selectedValues.value["month"]!,
+                      updateTime),
+                  const Text(' / ', style: TextStyle(fontSize: 20)),
+                  buildDropdown(
+                      "day", 1, 31, selectedValues.value["day"]!, updateTime),
+                  SizedBox(
+                    width: 50,
+                    child: Text(
+                      ' ${weekdaysList[now.weekday]}   ',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: now.weekday == 6
+                            ? Colors.blue
+                            : now.weekday == 7
+                                ? Colors.red
+                                : Colors.grey,
+                      ),
+                    ),
+                  ),
+                  buildDropdown(
+                      "hour", 0, 23, selectedValues.value["hour"]!, updateTime),
+                  const Text(' : ', style: TextStyle(fontSize: 20)),
+                  buildDropdown("minute", 0, 59,
+                      selectedValues.value["minute"]!, updateTime),
+                ],
+              ),
+              const SizedBox(width: 30),
+              IconButton(
+                  onPressed: () {
+                    ref
+                        .read(selectedLocationIndexProvider.notifier)
+                        .updateSelection(location);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                  ))
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
   }
 }
 

@@ -15,6 +15,7 @@ class TimedifferenceSidebar extends ConsumerWidget {
         body: Container(
       decoration: const BoxDecoration(color: Colors.blueGrey),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -22,8 +23,12 @@ class TimedifferenceSidebar extends ConsumerWidget {
               Row(
                 children: [
                   IconButton(
-                      onPressed: null,
-                      icon: Icon(
+                      onPressed: (){
+                        ref
+                      .read(baseTimeProvider.notifier)
+                      .setBaseTime(DateTime.now().toUtc().copyWith(minute: 0), tz.UTC, false);
+                      },
+                      icon: const Icon(
                         Icons.settings_backup_restore,
                         size: 40,
                         color: Colors.white,
@@ -32,9 +37,9 @@ class TimedifferenceSidebar extends ConsumerWidget {
                       onPressed: () {
                         ref
                             .read(baseTimeProvider.notifier)
-                            .setBaseTime(DateTime.now(), tz.local);
+                            .setBaseTime(DateTime.now(), tz.local, true);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.restore,
                         size: 40,
                         color: Colors.white,
@@ -57,10 +62,10 @@ class TimedifferenceSidebar extends ConsumerWidget {
             height: 30,
           ),
           Container(
-            height: 30,
-            width: 50,
+            height: 500,
+            width: 250,
             decoration: const BoxDecoration(
-              color: Colors.yellow,
+              color: Colors.black,
             ),
           ),
         ],
