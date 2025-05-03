@@ -1,24 +1,26 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:smiring_app/application/state/timedifference_provider/basic_providers.dart';
 import 'package:smiring_app/application/state/timedifference_provider/timedifference_simple_list_providers.dart';
-import 'package:smiring_app/presentation/utils/location_info.dart';
 import 'package:smiring_app/presentation/utils/world_locations.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class LocationPicker extends HookConsumerWidget {
-  const LocationPicker({super.key, this.changeIndex});
+  const LocationPicker(
+      {super.key,
+      required this.displayLocations,
+      required this.onTapType,
+      this.changeIndex = 0});
 
-  final int? changeIndex;
+  final List<LocationInfo> displayLocations;
+  final String onTapType;
+  final int changeIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<LocationInfo> allLocation = [
-      for (LocationInfo loc in WorldLocations()) loc
-    ];
-    List<LocationInfo> currentLocations =
-        ref.read(selectedLocationIndexProvider);
-    List<LocationInfo> remainingLocation =
-        allLocation.toSet().difference(currentLocations.toSet()).toList();
-
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -50,8 +52,12 @@ class LocationPicker extends HookConsumerWidget {
           Expanded(
             child: ListView(
               children: [
-                for (LocationInfo loc in remainingLocation)
-                  LocationMenuTile(locationInfo: loc),
+                for (LocationInfo loc in displayLocations)
+                  LocationMenuTile(
+                    locationInfo: loc,
+                    onTapType: onTapType,
+                    changeIndex: changeIndex,
+                  ),
               ],
             ),
           ),
@@ -62,26 +68,62 @@ class LocationPicker extends HookConsumerWidget {
 }
 
 class LocationMenuTile extends ConsumerWidget {
-  const LocationMenuTile({super.key, required this.locationInfo});
+  const LocationMenuTile(
+      {super.key,
+      required this.locationInfo,
+      required this.onTapType,
+      required this.changeIndex});
 
+  final String onTapType;
   final LocationInfo locationInfo;
+  final int changeIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    tz.initializeTimeZones();
+    final location = tz.getLocation(locationInfo.cityId);
+    final localTime = tz.TZDateTime.from(ref.read(baseTimeProvider), location);
+
+    final int offset = localTime.timeZoneOffset.inHours;
+    final String offsetString = offset > 0
+        ? '+$offset'
+        : offset == 0
+            ? '±0'
+            : '$offset';
+
+    final bool isDst = localTime.timeZoneOffset !=
+        tz.TZDateTime(location, localTime.year, 1, 1).timeZoneOffset;
+
     return ListTile(
       onTap: () {
-        ref
-            .read(selectedLocationIndexProvider.notifier)
-            .updateSelection(locationInfo);
+        if (onTapType == 'simple list') {
+          ref
+              .read(selectedLocationIndexProvider.notifier)
+              .updateSelection(locationInfo);
+        } else if (onTapType == 'app bar small clock') {
+          ref
+              .read(appBarSmallClockProvider.notifier)
+              .updateSelection(changeIndex, locationInfo);
+        }
+
         Navigator.of(context).pop();
       },
       title: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Text(
-          '${locationInfo.emoji}  ${locationInfo.locationName}',
-          style: const TextStyle(color: Colors.black),
-        ),
-      ),
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Text(
+                '${locationInfo.emoji}  ${locationInfo.locationName}',
+                style: const TextStyle(color: Colors.black),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                (isDst ? locationInfo.timeZone[1] : locationInfo.timeZone[0]) +
+                    (' ($offsetString)'),
+                style: const TextStyle(color: Colors.grey, fontSize: 10),
+              )
+            ],
+          )),
     );
   }
 }

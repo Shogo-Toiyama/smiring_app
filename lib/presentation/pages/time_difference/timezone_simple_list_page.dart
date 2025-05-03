@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smiring_app/application/state/timedifference_provider/timedifference_simple_list_providers.dart';
-import 'package:smiring_app/presentation/utils/location_info.dart';
+import 'package:smiring_app/presentation/utils/theme_colors.dart';
+import 'package:smiring_app/presentation/utils/world_locations.dart';
 import 'package:smiring_app/presentation/widgets/basic_app_bar.dart';
 import 'package:smiring_app/presentation/widgets/location_picker.dart';
 import 'package:smiring_app/presentation/widgets/timedifference_sidebar.dart';
@@ -12,8 +13,13 @@ class TimezoneSimpleListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<LocationInfo> allLocation = [
+      for (LocationInfo loc in WorldLocations()) loc
+    ];
     List<LocationInfo> currentLocations =
         ref.watch(selectedLocationIndexProvider);
+    List<LocationInfo> remainingLocation =
+        allLocation.toSet().difference(currentLocations.toSet()).toList();
 
     return Scaffold(
         appBar: const BasicaApBar(title: "Time Difference - Simple List"),
@@ -40,8 +46,10 @@ class TimezoneSimpleListPage extends HookConsumerWidget {
                       children: [
                         for (int i = 0; i < currentLocations.length; i++)
                           TimezoneSimpleListCountryBar(
-                              key: ValueKey(currentLocations[i].locationName),
-                              location: currentLocations[i])
+                            key: ValueKey(currentLocations[i].locationName),
+                            location: currentLocations[i],
+                            index: i,
+                          ),
                       ],
                     ),
                   ),
@@ -56,8 +64,9 @@ class TimezoneSimpleListPage extends HookConsumerWidget {
               right: 350,
               bottom: 50,
               child: FloatingActionButton(
+                backgroundColor: ThemeColors.smiringSkyBlue,
                 onPressed: () {
-                  showLocationPicker(context, 1);
+                  showLocationPicker(context, remainingLocation);
                 },
                 child: const Icon(Icons.add),
               ),
@@ -67,7 +76,8 @@ class TimezoneSimpleListPage extends HookConsumerWidget {
   }
 }
 
-void showLocationPicker(BuildContext context, int? changeIndex) {
+void showLocationPicker(
+    BuildContext context, List<LocationInfo> remainingLocation) {
   showDialog(
       context: context,
       builder: (context) {
@@ -76,7 +86,10 @@ void showLocationPicker(BuildContext context, int? changeIndex) {
           child: SizedBox(
             height: 450,
             width: 700,
-            child: LocationPicker(changeIndex: changeIndex),
+            child: LocationPicker(
+              displayLocations: remainingLocation,
+              onTapType: 'simple list',
+            ),
           ),
         );
       });

@@ -5,15 +5,17 @@ import 'package:smiring_app/application/state/timedifference_provider/timediffer
 import 'package:smiring_app/presentation/utils/weekdays_list.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:smiring_app/presentation/utils/location_info.dart';
+import 'package:smiring_app/presentation/utils/world_locations.dart';
 
 class TimezoneSimpleListCountryBar extends HookConsumerWidget {
   const TimezoneSimpleListCountryBar({
     super.key,
     required this.location,
+    required this.index
   });
 
   final LocationInfo location;
+  final int index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,6 +23,12 @@ class TimezoneSimpleListCountryBar extends HookConsumerWidget {
     DateTime utcTime = ref.watch(baseTimeProvider);
     final loc = tz.getLocation(location.cityId);
     DateTime now = tz.TZDateTime.from(utcTime, loc);
+
+    final int offset = now.timeZoneOffset.inHours;
+    final String offsetString = offset >0 ? '+$offset' : offset == 0 ? '±0' : '$offset';
+
+    final bool isDst = now.timeZoneOffset !=
+        tz.TZDateTime(loc, now.year, 1, 1).timeZoneOffset;
 
     final selectedValues = useState<Map<String, String>>({
       "year": now.year.toString(),
@@ -65,7 +73,7 @@ class TimezoneSimpleListCountryBar extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                width: 350,
+                width: 400,
                 child: Row(
                   children: [
                     const SizedBox(
@@ -75,6 +83,11 @@ class TimezoneSimpleListCountryBar extends HookConsumerWidget {
                     const SizedBox(width: 20),
                     Text(location.locationName,
                         style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 15),
+                    Text(
+                      (isDst ? location.timeZone[1] : location.timeZone[0]) + (' ($offsetString)'),
+                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
                   ],
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smiring_app/presentation/router/page_path.dart';
+import 'package:smiring_app/presentation/widgets/basic_app_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,6 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const BasicaApBar(title: 'Home', backButton: false,),
       body: Center(
         child: IconButton(
           onPressed: () {

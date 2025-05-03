@@ -1,41 +1,65 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smiring_app/presentation/utils/location_info.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:smiring_app/application/state/timedifference_provider/basic_providers.dart';
 import 'package:smiring_app/presentation/utils/world_locations.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:smiring_app/presentation/utils/theme_colors.dart';
+import 'package:smiring_app/presentation/widgets/app_bar_small_clock.dart';
 
-class BasicaApBar extends StatelessWidget implements PreferredSizeWidget {
-  const BasicaApBar(
-      {super.key,
-      required this.title,
-      this.height = kToolbarHeight,
-      this.color = Colors.blue,
-      this.clockLocations = const [WorldLocations.tokyo]});
+class BasicaApBar extends ConsumerWidget implements PreferredSizeWidget {
+  const BasicaApBar({
+    super.key,
+    required this.title,
+    this.height = kToolbarHeight,
+    this.color = ThemeColors.smiringSkyBlue,
+    this.backButton = true,
+  });
 
   final String title;
   final double height;
   final Color color;
-  final List<LocationInfo> clockLocations;
+  final bool backButton;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<LocationInfo> clockLocations = ref.watch(appBarSmallClockProvider);
+
     return Stack(
       children: [
         AppBar(
           centerTitle: true,
-          title: Row(
+          leading: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.menu, color: Colors.white)),
+          actions: [
+            SizedBox(
+              width: 350,
+              child: Row(
+                children: [
+                  for (int i = 0; i < 3; i++)
+                    SmallClock(clockLocation: clockLocations[i], index: i),
+                  const SizedBox(
+                    width: 20,
+                  )
+                ],
+              ),
+            ),
+          ],
+          backgroundColor: color,
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  )),
+              if (backButton)
+                IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    )),
               const SizedBox(
                 width: 20,
               ),
@@ -45,19 +69,9 @@ class BasicaApBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-          leading: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.menu, color: Colors.white)),
-          actions: [
-            SmallClock(clockLocation: clockLocations[0]),
-            const SizedBox(
-              width: 40,
-            )
-          ],
-          backgroundColor: color,
         ),
         Positioned(
-            left: 100,
+            left: 70,
             child: Image.asset(
               'assets/images/SmiRing_logo.png',
               width: 60,
@@ -68,41 +82,4 @@ class BasicaApBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(height);
-}
-
-class SmallClock extends HookWidget {
-  const SmallClock({super.key, required this.clockLocation});
-  final LocationInfo clockLocation;
-  @override
-  Widget build(BuildContext context) {
-    final timer = useRef<Timer?>(null);
-    tz.initializeTimeZones();
-    final loc = tz.getLocation(clockLocation.cityId);
-    DateTime now = tz.TZDateTime.now(loc);
-    final hour = useState<int>(now.hour);
-    final min = useState<int>(now.minute);
-
-    useEffect(() {
-      timer.value = Timer.periodic(const Duration(seconds: 3), (t) {
-        now = tz.TZDateTime.now(loc);
-        if (hour.value != now.hour) {
-          hour.value = now.hour;
-        }
-        if (min.value != now.minute) {
-          min.value = now.minute;
-        }
-      });
-      return () {
-        timer.value?.cancel();
-      };
-    }, []);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Text(
-        "${clockLocation.emoji}  ${hour.value.toString().padLeft(2, '0')}:${min.value.toString().padLeft(2, '0')}",
-        style: const TextStyle(color: Colors.white, fontSize: 15),
-      ),
-    );
-  }
 }

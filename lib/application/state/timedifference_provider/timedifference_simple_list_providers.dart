@@ -1,7 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smiring_app/presentation/utils/location_info.dart';
 import 'package:smiring_app/presentation/utils/world_locations.dart';
 import 'package:timezone/browser.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -43,6 +43,7 @@ class SelectedLocationIndexNotifier extends Notifier<List<LocationInfo>> {
       }
     }
     state = [...state, newLocInfo];
+    log('selection updated');
   }
 
   void updateList(List<LocationInfo> newList) {
