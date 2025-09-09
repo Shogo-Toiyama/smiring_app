@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smiring_app/application/state/timedifference_provider/timedifference_simple_list_providers.dart';
 import 'package:smiring_app/presentation/utils/theme_colors.dart';
 import 'package:smiring_app/presentation/utils/world_locations.dart';
-import 'package:smiring_app/presentation/widgets/basic_app_bar.dart';
 import 'package:smiring_app/presentation/widgets/location_picker.dart';
 import 'package:smiring_app/presentation/widgets/timedifference_sidebar.dart';
 import 'package:smiring_app/presentation/widgets/timezone_simple_list_country_bar.dart';

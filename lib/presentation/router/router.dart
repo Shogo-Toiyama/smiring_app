@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:smiring_app/application/state/timedifference_provider/basic_providers.dart';
 import 'package:smiring_app/presentation/pages/gird_menu/grid_menu_page.dart';
-import 'package:smiring_app/presentation/pages/home/home_page.dart';
 import 'package:smiring_app/presentation/pages/sns_post_analysis/instagram_post_analysis/instagram_post_analysis_page.dart';
 import 'package:smiring_app/presentation/pages/sns_post_analysis/youtube_post_analysis/youtube_post_analysis_page.dart';
 import 'package:smiring_app/presentation/pages/time_difference/world_clock_page.dart';

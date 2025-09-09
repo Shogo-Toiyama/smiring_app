@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smiring_app/presentation/utils/world_locations.dart';
 import 'package:smiring_app/presentation/widgets/location_picker.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/timezone.dart';
 
 class SmallClock extends HookConsumerWidget {
   const SmallClock(

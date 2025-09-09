@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smiring_app/presentation/utils/world_locations.dart';
 import 'package:timezone/browser.dart';
