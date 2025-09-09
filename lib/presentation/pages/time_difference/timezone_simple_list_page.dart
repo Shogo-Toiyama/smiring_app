@@ -22,7 +22,6 @@ class TimezoneSimpleListPage extends HookConsumerWidget {
         allLocation.toSet().difference(currentLocations.toSet()).toList();
 
     return Scaffold(
-        appBar: const BasicaApBar(title: "Time Difference - Simple List"),
         body: Stack(
           children: [
             Row(

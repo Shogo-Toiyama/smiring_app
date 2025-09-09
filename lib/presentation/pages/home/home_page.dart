@@ -9,14 +9,22 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BasicaApBar(title: 'Home', backButton: false,),
+      appBar: const BasicAppBar(title: 'Home', backButton: false,),
       body: Center(
-        child: IconButton(
-          onPressed: () {
-            context.push(PagePath.timezoneSimpleList);
-          },
-          icon: const Icon(Icons.watch_later_outlined),
-        ),
+        child: GridView.count(
+          crossAxisCount: 5,
+          padding: EdgeInsets.all(10),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          children: [
+            IconButton(
+              onPressed: () {
+                context.push(PagePath.timezoneSimpleList);
+              },
+              icon: const Icon(Icons.watch_later_outlined, size: 150),
+            ),
+          ],
+        )
       ),
     );
   }

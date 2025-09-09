@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:smiring_app/presentation/router/router.dart';
 
 void main() {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    tzdata.initializeTimeZones();
     final router = RouterClass().getRouter();
     return MaterialApp.router(
       title: 'SmiRing App',

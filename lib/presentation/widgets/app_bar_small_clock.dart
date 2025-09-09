@@ -17,62 +17,55 @@ class SmallClock extends HookConsumerWidget {
   final int index;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timer = useRef<Timer?>(null);
-    tz.initializeTimeZones();
-    final loc = useRef<Location>(tz.getLocation(clockLocation.cityId));
-    DateTime now = tz.TZDateTime.now(loc.value);
-    final hour = useState<int>(now.hour);
-    final min = useState<int>(now.minute);
-    final colon = useState<String>(':');
-    bool isColon = true;
+    final location = useMemoized(
+      () => tz.getLocation(clockLocation.cityId),
+      [clockLocation.cityId],
+    );
 
-    useEffect(() {
-      loc.value = tz.getLocation(clockLocation.cityId);
-      timer.value = Timer.periodic(const Duration(seconds: 1), (t) {
-        log(clockLocation.cityId);
-        now = tz.TZDateTime.now(loc.value);
-        if (hour.value != now.hour) {
-          hour.value = now.hour;
-        }
-        if (min.value != now.minute) {
-          min.value = now.minute;
-        }
-        colon.value = isColon ? ':' : '';
-        isColon = !isColon;
-      });
-      return () {
-        timer.value?.cancel();
-      };
-    }, [clockLocation]);
+    final tick = useStream<int>(
+      useMemoized(() => Stream.periodic(const Duration(seconds: 1), (i) => i), const []),
+      initialData: 0,
+    ).data!;
+
+    final now = tz.TZDateTime.now(location);
+    final hh = now.hour.toString().padLeft(2, '0');
+    final mm = now.minute.toString().padLeft(2, '0');
+    final colon = (tick % 2 == 0) ? ':' : '';
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: GestureDetector(
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: 
+        GestureDetector(
           onTap: () {
             showLocationPicker(context, index);
           },
-          child: Row(
+          child: Container(
+            color: Colors.transparent,
+            child: Row(
             children: [
               Text(
-                "${clockLocation.emoji + clockLocation.names[3]}  ${hour.value.toString().padLeft(2, '0')}",
+                "${clockLocation.emoji + clockLocation.names[3]}  $hh",
                 style: const TextStyle(color: Colors.white, fontSize: 15),
               ),
               SizedBox(
                 width: 5,
                 child: Center(
                   child: Text(
-                    colon.value,
+                    colon,
                     style: const TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 ),
               ),
               Text(
-                min.value.toString().padLeft(2, '0'),
+                mm,
                 style: const TextStyle(color: Colors.white, fontSize: 15),
               ),
             ],
           ),
-        ));
+          )
+        )));
   }
 }
 

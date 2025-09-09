@@ -7,8 +7,8 @@ import 'package:smiring_app/presentation/utils/world_locations.dart';
 import 'package:smiring_app/presentation/utils/theme_colors.dart';
 import 'package:smiring_app/presentation/widgets/app_bar_small_clock.dart';
 
-class BasicaApBar extends ConsumerWidget implements PreferredSizeWidget {
-  const BasicaApBar({
+class BasicAppBar extends ConsumerWidget implements PreferredSizeWidget {
+  const BasicAppBar({
     super.key,
     required this.title,
     this.height = kToolbarHeight,
