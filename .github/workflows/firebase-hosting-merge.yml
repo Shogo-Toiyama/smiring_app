@@ -6,15 +6,44 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: flutter build web --release --dart-define=ENV=prod --pwa-strategy=none
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Flutter のセットアップ
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMIRINGAPP }}
+          flutter-version: '3.29.3'
+          channel: 'stable'
+          cache: true
+
+      # Web 有効化（初回でも安全）
+      - name: Enable Flutter web
+        run: flutter config --enable-web
+
+      # 依存解決
+      - name: Pub get
+        run: flutter pub get
+
+      # Flutter Web を本番ビルド
+      - name: Build Flutter Web
+        run: flutter build web --release --dart-define=ENV=prod --pwa-strategy=none
+
+      # Firebase CLI セットアップ
+      - name: Set up Firebase CLI
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMIRINGAPP }}'
           channelId: live
-          projectId: smiringapp
+          projectId: smiringapp   # ← あなたの Firebase プロジェクトIDに合わせる
+          target:                 # 複数サイトを使ってなければ空でOK
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
+        # 注: action-hosting-deploy は build/web を自動検出します。publicを変えた場合は firebase.json に合わせてください。
